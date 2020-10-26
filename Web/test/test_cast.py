@@ -1,8 +1,11 @@
+import pytest
 from selenium import webdriver
 
 
-class test_Selenium:
+def test_demo1():
+    driver = webdriver.Chrome()
+    driver.get("https://www.baidu.com/")
 
-    def test_demo1(self):
-        driver = webdriver.Chrome()
-        driver.get("http://www.baidu.com")
+
+if __name__ == "__main__":
+    test_demo1()
