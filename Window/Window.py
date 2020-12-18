@@ -38,7 +38,7 @@ def get_Serial():
         plist_0 = list(plist[0])
         serialName = plist_0[0]
         serialFd = serial.Serial(serialName, 115200, timeout=60)
-        print("check which port was really used >", serialFd.name)
+        # print("check which port was really used >", serialFd.name)
         cmb['value'] = (serialFd.name)
 
 
@@ -54,6 +54,7 @@ def value_test():
     return
 
 
+get_Serial()
 button1 = Button(top, text="开始测试", bg="#E6E6FA", activebackground="#F8F8FF", command=get_Serial)
 button1.grid()
 button2 = Button(top, text="结束测试", bg="#E6E6FA", activebackground="#F8F8FF", command=value_test)
