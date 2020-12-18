@@ -1,19 +1,25 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-
 from tkinter import *
+import serial.tools.list_ports
+from tkinter import ttk
 
 top = Tk()
 top.title("串口操作")
 top.geometry('650x650+10+10')
 menubar = Menu(top)
+
+cmb = ttk.Combobox(top)
+cmb.grid()
 Texta = Text(top, width="40", height="20", pady=0)
 Texta.grid(row=1, column=0, rowspan=10, columnspan=10)
 Textb = Text(top, width="40", height="20", pady=0)
 Textb.grid(row=1, column=12, rowspan=15, columnspan=10)
-labela = Label(top, text="Hello boy")
-labela.grid()
+
+
+# labela = Label(top, text="SERIAL")
+# labela.grid()
 
 
 def get_text():
@@ -21,7 +27,22 @@ def get_text():
     Textb.delete(1.0, END)
     Textb.insert(1.0, t)
     return t
-def get_serial():
+
+
+def get_Serial():
+    plist = list(serial.tools.list_ports.comports())
+    if len(plist) <= 0:
+        print("The Serial port can't find!")
+    else:
+        plist_0 = list(plist[0])
+        serialName = plist_0[0]
+        serialFd = serial.Serial(serialName, 115200, timeout=60)
+        print("check which port was really used >", serialFd.name)
+    return serialFd.name
+
+
+def insert_combobox_Sei():
+    cmb['value'] = (get_Serial())
     return
 
 
@@ -32,7 +53,8 @@ def check_button():
         Textb.insert(1.0, t)
 
 
-button1 = Button(top, text="开始测试", bg="#E6E6FA", activebackground="#F8F8FF", command=get_text)
+cmb['value'] = (get_Serial())
+button1 = Button(top, text="开始测试", bg="#E6E6FA", activebackground="#F8F8FF", command=insert_combobox_Sei)
 button1.grid()
 button2 = Button(top, text="结束测试", bg="#E6E6FA", activebackground="#F8F8FF", command=check_button)
 button2.grid()
