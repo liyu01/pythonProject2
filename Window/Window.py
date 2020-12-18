@@ -4,7 +4,6 @@
 from tkinter import *
 import serial.tools.list_ports
 from tkinter import ttk
-from Window import *
 
 top = Tk()
 top.title("串口操作")
@@ -29,7 +28,6 @@ def get_text():
     Textb.insert(1.0, t)
     return t
 
-
 def get_Serial():
     plist = list(serial.tools.list_ports.comports())
     if len(plist) <= 0:
@@ -42,19 +40,24 @@ def get_Serial():
         cmb['value'] = (serialFd.name)
 
 
-def check_button():
-    if CheckVar1.get() == True:
-        t = Texta.get(1.0, END)
-        Textb.delete(1.0, END)
-        Textb.insert(1.0, t)
-
+# def check_button():
+#     if CheckVar1.get() == True:
+#         t = Texta.get(1.0, END)
+#         Textb.delete(1.0, END)
+#         Textb.insert(1.0, t)
+#     else:
+#         print()
 
 def value_test():
-    print(cmb.get())
-    return
+    value = cmb.get()
+    return value
 
 
-get_Serial()
+def send_value():
+    bamp = serial.Serial(value_test(), 115200, timeout=10)
+    return bamp
+
+
 button1 = Button(top, text="开始测试", bg="#E6E6FA", activebackground="#F8F8FF", command=get_Serial)
 button1.grid()
 button2 = Button(top, text="结束测试", bg="#E6E6FA", activebackground="#F8F8FF", command=value_test)
@@ -70,7 +73,8 @@ filemenu = Menu(menubar, tearoff=False)
 explainmenu = Menu(menubar, tearoff=False)
 menubar.add_cascade(label="文件", menu=filemenu)
 menubar.add_cascade(label="说明", menu=explainmenu)
-filemenu.add_command(label="退出", command=top.quit())
-filemenu.add_command(label="打开", command=top.quit())
+filemenu.add_command(label="退出")
+filemenu.add_command(label="打开")
 top.config(menu=menubar)
+
 top.mainloop()
