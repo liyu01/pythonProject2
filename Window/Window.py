@@ -4,6 +4,7 @@
 from tkinter import *
 import serial.tools.list_ports
 from tkinter import ttk
+from Window import *
 
 top = Tk()
 top.title("串口操作")
