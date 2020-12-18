@@ -36,7 +36,7 @@ button1 = Button(top, text="开始测试", bg="#E6E6FA", activebackground="#F8F8
 button1.grid()
 button2 = Button(top, text="结束测试", bg="#E6E6FA", activebackground="#F8F8FF", command=check_button)
 button2.grid()
-#  复选框
+#  复选框 variable为是否选中，get方法，返回TRUE,FALSE
 CheckVar1 = IntVar()
 C1 = Checkbutton(top, text="转换成16进制", variable=CheckVar1, onvalue=1, offvalue=0, height=2, width=10, command=get_text())
 C1.grid()
