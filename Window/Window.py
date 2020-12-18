@@ -4,7 +4,7 @@
 from tkinter import *
 import serial.tools.list_ports
 from tkinter import ttk
-
+from time import *
 top = Tk()
 top.title("串口操作")
 top.geometry('650x650+10+10')
@@ -40,6 +40,11 @@ def get_Serial():
         cmb['value'] = (serialFd.name)
 
 
+def Date_txtpath(t, date):
+    # 数据输入
+    t.write(date)
+    return None
+
 # def check_button():
 #     if CheckVar1.get() == True:
 #         t = Texta.get(1.0, END)
@@ -57,6 +62,17 @@ def send_value():
     bamp = serial.Serial(value_test(), 115200, timeout=10)
     return bamp
 
+
+def script_write(order, com):
+    #  串口指令操作
+    if order == None:
+        com.write("\n".encode())
+    else:
+        com.write("\n".encode())
+        com.write(order.encode())
+        com.write("\n".encode())
+    sleep(3)
+    return None
 
 button1 = Button(top, text="开始测试", bg="#E6E6FA", activebackground="#F8F8FF", command=get_Serial)
 button1.grid()
