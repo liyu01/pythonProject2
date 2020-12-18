@@ -38,12 +38,7 @@ def get_Serial():
         serialName = plist_0[0]
         serialFd = serial.Serial(serialName, 115200, timeout=60)
         print("check which port was really used >", serialFd.name)
-    return serialFd.name
-
-
-def insert_combobox_Sei():
-    cmb['value'] = (get_Serial())
-    return
+        cmb['value'] = (serialFd.name)
 
 
 def check_button():
@@ -53,10 +48,14 @@ def check_button():
         Textb.insert(1.0, t)
 
 
-cmb['value'] = (get_Serial())
-button1 = Button(top, text="开始测试", bg="#E6E6FA", activebackground="#F8F8FF", command=insert_combobox_Sei)
+def value_test():
+    print(cmb.get())
+    return
+
+
+button1 = Button(top, text="开始测试", bg="#E6E6FA", activebackground="#F8F8FF", command=get_Serial)
 button1.grid()
-button2 = Button(top, text="结束测试", bg="#E6E6FA", activebackground="#F8F8FF", command=check_button)
+button2 = Button(top, text="结束测试", bg="#E6E6FA", activebackground="#F8F8FF", command=value_test)
 button2.grid()
 #  复选框 variable为是否选中，get方法，返回TRUE,FALSE
 CheckVar1 = IntVar()
