@@ -1,0 +1,16 @@
+#设备串口号
+- com: com8
+#设备波特率
+- bps: 115200
+
+#串口输入指令
+- order:
+        -
+        - root
+        - reboot
+#重启循环次数
+- count: 6
+#期望log对比结果
+- expect:
+        - ok
+        - errors
