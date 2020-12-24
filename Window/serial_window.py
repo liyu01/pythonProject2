@@ -3,7 +3,7 @@
 from tkinter import *
 from tkinter import ttk
 import serial.tools.list_ports
-
+import threading
 from serialLog.SerialCap import SerialSet
 
 
@@ -25,6 +25,17 @@ def start():
     SerialSet().log_Read(com=com1, order=d[2]["order"], expect=d[4]["expect"], count=d[3]["count"])
     return
 
+
+def thread_it(func, *args):
+    '''将函数打包进线程'''
+    # 创建
+    t = threading.Thread(target=func, args=args)
+    # 守护 !!!
+    t.setDaemon(True)
+    # 启动
+    t.start()
+    # 阻塞--卡死界面！
+    # t.join()
 
 tk = Tk()
 var = IntVar()
@@ -52,7 +63,7 @@ text1.grid(row=6, columnspan=6)
 #            sticky=W+E+N+S, padx=5, pady=5)#合并两行，两列，居中，四周外延5个长度
 
 # 按钮控件
-button1 = Button(tk, text="开始测试", command=start)
+button1 = Button(tk, text="开始测试", command=lambda: thread_it(start))
 button1.grid(row=0, column=2)
 
 get_Serial()

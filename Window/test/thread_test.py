@@ -1,22 +1,20 @@
 #!/usr/bin/python
-import time, os
+# -*- coding: UTF-8 -*-
+# 多线程实例
+import time
 import threading
 
 
-def run(n):
-    print('task', n)
-    time.sleep(1)
-    print('2s')
-    time.sleep(1)
-    print('1s')
-    time.sleep(1)
-    print('0s')
-    time.sleep(1)
+def mark():
+    # 暂停3秒
+    time.sleep(3)
+    print("Mark的帅，远近闻")
 
 
-if __name__ == '__main__':
-    # target是要执行的函数名（不是函数），args是函数对应的参数，以元组的形式存在
-    t1 = threading.Thread(target=run, args=('t1',))
-    t2 = threading.Thread(target=run, args=('t2',))
-    t1.start()
-    t2.start()
+if __name__ == "__main__":
+    print("程序开始执行了")
+    # 定义子线程
+    t = threading.Thread(target=mark)
+    # 启动子线程
+    t.start()
+    print("单线程程序到这里主线程就会结束了，多线程呢，看看吧")
