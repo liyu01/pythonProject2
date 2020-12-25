@@ -22,14 +22,14 @@ from serialLog.SerialCap import SerialSet
 def start():
     d = SerialSet().read_yml()
     com = cmb.get()
+    bps = cmb1.get()
     if com == "":
         text1.delete(1.0, END)
         text1.insert(1.0, "请选择串口号\n")
     else:
-        com1 = SerialSet().ser_set(cmb.get(), bps=d[1]["bps"])
+        com1 = SerialSet().ser_set(cmb.get(), bps)
         SerialSet().log_Read(com=com1, order=d[2]["order"], expect=d[4]["expect"], count=d[3]["count"])
         return
-
 
 def thread_it(func, *args):
     '''将函数打包进线程'''
@@ -51,12 +51,15 @@ tk.geometry('650x650+10+10')
 # 标签控件，显示文本和位图，展示在第一行
 Label(tk, text="串口号:").grid(row=0, sticky=E)  # 靠右
 Label(tk, text="波特率:").grid(row=2, sticky=E)  # 靠右
-Label(tk, text="事实日志").grid(row=5, sticky=E)  # 靠右
+Label(tk, text="实时日志").grid(row=5, sticky=E)  # 靠右
 
 # 输入控件
 cmb = ttk.Combobox(tk)
 cmb.grid(row=0, column=1, padx=10, pady=10, sticky=W)
-
+cmb1 = ttk.Combobox(tk)
+cmb1.grid(row=2, column=1, padx=10, pady=10, sticky=W)
+cmb1['values'] = ('115200', '9600')
+cmb1.current(0)
 # 多选框插件
 button = Checkbutton(tk, text="重启", variable=var)
 button.grid(row=3, columnspan=2, sticky=W)
@@ -73,8 +76,6 @@ text1.grid(row=6, columnspan=6)
 # 按钮控件
 button1 = Button(tk, text="开始测试", command=lambda: thread_it(start))
 button1.grid(row=0, column=2)
-entry1 = Entry(tk)
-entry1.grid(row=2, column=1, padx=10, pady=10, sticky=W)
 
 # 主事件循环
 mainloop()
