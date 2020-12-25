@@ -3,7 +3,6 @@
 from tkinter import *
 from tkinter import ttk
 import threading
-from serialLog.SerialCap import SerialSet
 import os
 import time
 import serial
@@ -40,15 +39,15 @@ class MY_GUI():
         self.button1.grid(row=0, column=2)
 
     def start(self):
-        d = SerialSet().read_yml()
+        d = self.read_yml()
         com = self.cmb.get()
         bps = self.cmb1.get()
         if com == "":
             self.text1.insert(1.0, "请选择串口号\n")
         else:
             self.text1.delete(1.0, END)
-            com1 = SerialSet().ser_set(self.cmb.get(), bps)
-            SerialSet().log_Read(com=com1, order=d[2]["order"], expect=d[4]["expect"], count=d[3]["count"])
+            com1 = self.ser_set(self.cmb.get(), bps)
+            self.log_Read(com=com1, order=d[2]["order"], expect=d[4]["expect"], count=d[3]["count"])
             return
 
     def thread_it(self, func, *args):
@@ -67,10 +66,8 @@ class MY_GUI():
         try:
             bamp = serial.Serial(com, bps, timeout=10)
             flag = bamp.is_open
-            print(flag)
-        except PermissionError:
-            print("串口无法访问")
-        return bamp
+        except FileNotFoundError:
+            print("找不到这个串口")
 
     def read_yml(self):
         # 文件是否存在
@@ -99,19 +96,19 @@ class MY_GUI():
     def log_Read(self, order, com, expect, count):
         """串口读取"""
         # print(com)
-        t = SerialSet().make_Txt()
+        t = self.make_Txt()
         # 控制重启次数
         counts = count + 1
         for i in range(1, counts):
             for y in order:
-                SerialSet().script_write(y, com)
+                self.script_write(y, com)
             print(f"重启第 {i} 次")
-            SerialSet().Date_txtpath(t, f"重启第 {i} 次" + "\n")
+            self.Date_txtpath(t, f"重启第 {i} 次" + "\n")
             while True:
                 #  按行读取串口数据
                 date = com.readline()
                 strdate = str(date)
-                SerialSet().Date_txtpath(t, strdate + "\n")
+                self.Date_txtpath(t, strdate + "\n")
                 for x in expect:
                     if x in strdate:
                         print(strdate)
