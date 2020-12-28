@@ -17,7 +17,7 @@ class MY_GUI():
     # 设置窗口
     def set_init_window(self):
         var = IntVar()
-        self.get_port()
+        port = self.get_port()
         # 标签控件
         Label(self.tk, text="串口号:").grid(row=0, sticky=E)
         Label(self.tk, text="波特率:").grid(row=2, sticky=E)
@@ -34,31 +34,39 @@ class MY_GUI():
         self.button = Checkbutton(self.tk, text="重启", variable=var)
         self.button.grid(row=3, columnspan=2, sticky=W)
         # 插入展示框
-        self.text1 = Text(self.tk, width=50, height=30)
+        self.text1 = Text(self.tk, width=80, height=30)
         self.text1.grid(row=6, columnspan=6)
         # 按钮控件
         self.button1 = Button(self.tk, text="开始测试", command=lambda: self.thread_it(self.start))
         self.button1.grid(row=0, column=2)
+        # self.plist = list(serial.tools.list_ports.comports())
+        # if len(self.plist) <= 0:
+        #     self.text1.insert(1.0, "The Serial port can't find!\n")
+        #     print("The Serial port can't find!")
+        # else:
+        #     self.plist_0 = list(self.plist[0])
+        #     self.serialName = self.plist_0[0]
+        self.cmb['value'] = port[0]
 
     def get_port(self):
-        self.plist = self.list(self.serial.tools.list_ports.comports())
-        if len(self.plist) <= 0:
-            print("The Serial port can't find!")
+        self.port_list = list(serial.tools.list_ports.comports())
+        if len(self.port_list) == 0:
+            print('找不到串口')
         else:
-            self.plist_0 = self.list(self.plist[0])
-            self.serialName = self.plist_0[0]
-            self.cmb['value'] = (self.serialName)
-        return
+            return self.port_list[0]
 
     def start(self):
         d = self.read_yml()
         com = self.cmb.get()
+        print(com)
         bps = self.cmb1.get()
+        print(bps)
         if com == "":
             self.text1.insert(1.0, "请选择串口号\n")
         else:
             self.text1.delete(1.0, END)
             com_sort = self.cmb.get()
+            self.text1.insert(1.0, "程序运行\n")
             com1 = self.serial_set(com_sort, bps)
             self.log_Read(com=com1, order=d[2]["order"], expect=d[4]["expect"], count=d[3]["count"])
             return
@@ -117,6 +125,7 @@ class MY_GUI():
         for i in range(1, counts):
             for y in order:
                 self.script_write(y, com)
+            self.text1.insert("end", "第" + str(i) + "次重启\n")
             print(f"重启第 {i} 次")
             self.Date_txtpath(t, f"重启第 {i} 次" + "\n")
             while True:
@@ -126,8 +135,10 @@ class MY_GUI():
                 self.Date_txtpath(t, strdate + "\n")
                 for x in expect:
                     if x in strdate:
+                        self.text1.insert("end", strdate + "\n")
                         print(strdate)
                 if strdate == "b''":
+                    self.text1.insert("end", "退出\n")
                     print("退出")
                     break
         return None

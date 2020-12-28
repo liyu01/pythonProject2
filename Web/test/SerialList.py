@@ -18,6 +18,8 @@ import serial.tools.list_ports
 import serial.tools.list_ports
 
 port_list = list(serial.tools.list_ports.comports())
+print(port_list)
+print(port_list[0])
 if len(port_list) == 0:
     print('找不到串口')
 else:
