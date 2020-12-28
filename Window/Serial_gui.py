@@ -18,10 +18,10 @@ class MY_GUI():
     def set_init_window(self):
         var = IntVar()
         self.get_port()
-        # 标签控件，显示文本和位图，展示在第一行
-        Label(self.tk, text="串口号:").grid(row=0, sticky=E)  # 靠右
-        Label(self.tk, text="波特率:").grid(row=2, sticky=E)  # 靠右
-        Label(self.tk, text="实时日志").grid(row=5, sticky=E)  # 靠右
+        # 标签控件
+        Label(self.tk, text="串口号:").grid(row=0, sticky=E)
+        Label(self.tk, text="波特率:").grid(row=2, sticky=E)
+        Label(self.tk, text="实时日志").grid(row=5, sticky=E)
 
         # 输入控件
         self.cmb = ttk.Combobox(self.tk)
