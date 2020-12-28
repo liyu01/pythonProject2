@@ -7,6 +7,7 @@ import os
 import time
 import serial
 import yaml
+import serial.tools.list_ports
 
 
 class MY_GUI():
@@ -16,6 +17,7 @@ class MY_GUI():
     # 设置窗口
     def set_init_window(self):
         var = IntVar()
+        self.get_port()
         # 标签控件，显示文本和位图，展示在第一行
         Label(self.tk, text="串口号:").grid(row=0, sticky=E)  # 靠右
         Label(self.tk, text="波特率:").grid(row=2, sticky=E)  # 靠右
@@ -38,6 +40,16 @@ class MY_GUI():
         self.button1 = Button(self.tk, text="开始测试", command=lambda: self.thread_it(self.start))
         self.button1.grid(row=0, column=2)
 
+    def get_port(self):
+        self.plist = self.list(self.serial.tools.list_ports.comports())
+        if len(self.plist) <= 0:
+            print("The Serial port can't find!")
+        else:
+            self.plist_0 = self.list(self.plist[0])
+            self.serialName = self.plist_0[0]
+            self.cmb['value'] = (self.serialName)
+        return
+
     def start(self):
         d = self.read_yml()
         com = self.cmb.get()
@@ -46,7 +58,8 @@ class MY_GUI():
             self.text1.insert(1.0, "请选择串口号\n")
         else:
             self.text1.delete(1.0, END)
-            com1 = self.ser_set(self.cmb.get(), bps)
+            com_sort = self.cmb.get()
+            com1 = self.serial_set(com_sort, bps)
             self.log_Read(com=com1, order=d[2]["order"], expect=d[4]["expect"], count=d[3]["count"])
             return
 
@@ -61,13 +74,15 @@ class MY_GUI():
         # 阻塞--卡死界面！
         # t.join()
 
-    def ser_set(self, com, bps):
+    def serial_set(self, com, bps):
         #  串口设置
-        try:
-            bamp = serial.Serial(com, bps, timeout=10)
-            flag = bamp.is_open
-        except FileNotFoundError:
-            print("找不到这个串口")
+
+        bamp = serial.Serial(com, bps, timeout=10)
+        flag = bamp.is_open
+        if flag:
+            return bamp
+        else:
+            print("串口无法打开")
 
     def read_yml(self):
         # 文件是否存在
@@ -137,6 +152,7 @@ class MY_GUI():
 
 def gui_start():
     tk = Tk()  # 实例化出一个父窗口
+    tk.title("串口测试工具")
     ZMJ_PORTAL = MY_GUI(tk)
     # 设置根窗口默认属性
     ZMJ_PORTAL.set_init_window()

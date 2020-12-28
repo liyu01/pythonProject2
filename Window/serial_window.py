@@ -7,16 +7,16 @@ import threading
 from serialLog.SerialCap import SerialSet
 
 
-# def get_Serial():
-#     plist = list(serial.tools.list_ports.comports())
-#     if len(plist) <= 0:
-#         print("The Serial port can't find!")
-#     else:
-#         plist_0 = list(plist[0])
-#         serialName = plist_0[0]
-#         serialFd = serial.Serial(serialName, 115200, timeout=60)
-#         # print("check which port was really used >", serialFd.name)
-#         cmb['value'] = (serialFd.name)
+def get_Serial():
+    plist = list(serial.tools.list_ports.comports())
+    if len(plist) <= 0:
+        print("The Serial port can't find!")
+    else:
+        plist_0 = list(plist[0])
+        serialName = plist_0[0]
+        serialFd = serial.Serial(serialName, 115200, timeout=60)
+        # print("check which port was really used >", serialFd.name)
+        cmb['value'] = (serialFd.name)
 
 
 def start():
@@ -70,7 +70,7 @@ text1.grid(row=6, columnspan=6)
 # 按钮控件
 button1 = Button(tk, text="开始测试", command=lambda: thread_it(start))
 button1.grid(row=0, column=2)
-
+get_Serial()
 # 主事件循环
 mainloop()
 
