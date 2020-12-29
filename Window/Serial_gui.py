@@ -155,7 +155,6 @@ class MY_GUI():
         t.write(date)
         return None
 
-
 if __name__ == '__main__':
     tk = Tk()  # 实例化出一个父窗口
     tk.title("串口测试工具")
