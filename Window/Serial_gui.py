@@ -17,7 +17,7 @@ class MY_GUI():
     # 设置窗口
     def set_init_window(self):
         var = IntVar()
-        port = self.get_port()
+        self.port = self.get_port()
         # 标签控件
         Label(self.tk, text="串口号:").grid(row=0, sticky=E)
         Label(self.tk, text="波特率:").grid(row=2, sticky=E)
@@ -35,25 +35,20 @@ class MY_GUI():
         self.button.grid(row=3, columnspan=2, sticky=W)
         # 插入展示框
         self.text1 = Text(self.tk, width=80, height=30)
-        self.text1.grid(row=6, columnspan=6)
+        self.text1.grid(row=6, columnspan=16)
         # 按钮控件
         self.button1 = Button(self.tk, text="开始测试", command=lambda: self.thread_it(self.start))
         self.button1.grid(row=0, column=2)
-        # self.plist = list(serial.tools.list_ports.comports())
-        # if len(self.plist) <= 0:
-        #     self.text1.insert(1.0, "The Serial port can't find!\n")
-        #     print("The Serial port can't find!")
-        # else:
-        #     self.plist_0 = list(self.plist[0])
-        #     self.serialName = self.plist_0[0]
-        self.cmb['value'] = port[0]
+        self.cmb['value'] = self.port
 
     def get_port(self):
         self.port_list = list(serial.tools.list_ports.comports())
-        if len(self.port_list) == 0:
-            print('找不到串口')
-        else:
-            return self.port_list[0]
+        while len(self.port_list) == 0:
+            self.port_list = list(serial.tools.list_ports.comports())
+        self.comlist = []
+        for i in range(0, len(self.port_list)):
+            self.comlist.append(self.port_list[i][0])
+        return self.comlist
 
     def start(self):
         d = self.read_yml()
