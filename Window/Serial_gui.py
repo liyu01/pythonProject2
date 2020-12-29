@@ -21,7 +21,10 @@ class MY_GUI():
         Label(self.tk, text="串口号:").grid(row=0, sticky=E)
         Label(self.tk, text="波特率:").grid(row=2, sticky=E)
         Label(self.tk, text="实时日志").grid(row=5, sticky=E)
+        Label(self.tk, text="次数:").grid(row=0, column=4, sticky=E)
 
+        self.Index = Entry(self.tk, width=6)
+        self.Index.grid(row=0, column=6)
         # 输入控件
         self.cmb = ttk.Combobox(self.tk)
         self.cmb.grid(row=0, column=1, padx=10, pady=10, sticky=W)
@@ -51,11 +54,12 @@ class MY_GUI():
         return self.comlist
 
     def start(self):
+
+        self.button1['state'] = DISABLED
         d = self.read_yml()
         com = self.cmb.get()
-        print(com)
+        index = int(self.Index.get())
         bps = self.cmb1.get()
-        print(bps)
         if com == "":
             self.text1.insert(1.0, "请选择串口号\n")
         else:
@@ -63,7 +67,8 @@ class MY_GUI():
             com_sort = self.cmb.get()
             self.text1.insert(1.0, "程序运行\n")
             com1 = self.serial_set(com_sort, bps)
-            self.log_Read(com=com1, order=d[2]["order"], expect=d[4]["expect"], count=d[3]["count"])
+            self.log_Read(com=com1, order=d[2]["order"], expect=d[4]["expect"], count=index)
+            self.button1['state'] = NORMAL
             return
 
     def thread_it(self, func, *args):
