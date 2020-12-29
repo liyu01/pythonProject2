@@ -17,7 +17,6 @@ class MY_GUI():
     # 设置窗口
     def set_init_window(self):
         var = IntVar()
-        self.port = self.get_port()
         # 标签控件
         Label(self.tk, text="串口号:").grid(row=0, sticky=E)
         Label(self.tk, text="波特率:").grid(row=2, sticky=E)
@@ -39,12 +38,13 @@ class MY_GUI():
         # 按钮控件
         self.button1 = Button(self.tk, text="开始测试", command=lambda: self.thread_it(self.start))
         self.button1.grid(row=0, column=2)
+        self.port = self.get_port()
         self.cmb['value'] = self.port
 
     def get_port(self):
         self.port_list = list(serial.tools.list_ports.comports())
-        while len(self.port_list) == 0:
-            self.port_list = list(serial.tools.list_ports.comports())
+        # while len(self.port_list) == 0:
+        #     self.port_list = list(serial.tools.list_ports.comports())
         self.comlist = []
         for i in range(0, len(self.port_list)):
             self.comlist.append(self.port_list[i][0])
@@ -156,13 +156,10 @@ class MY_GUI():
         return None
 
 
-def gui_start():
+if __name__ == '__main__':
     tk = Tk()  # 实例化出一个父窗口
     tk.title("串口测试工具")
     ZMJ_PORTAL = MY_GUI(tk)
     # 设置根窗口默认属性
     ZMJ_PORTAL.set_init_window()
     tk.mainloop()  # 父窗口进入事件循环，可以理解为保持窗口运行，否则界面不展示
-
-
-gui_start()
