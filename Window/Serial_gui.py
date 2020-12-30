@@ -43,18 +43,24 @@ class MY_GUI():
         self.button1 = Button(self.tk, text="开始测试", command=lambda: self.thread_it(self.start))
         self.button1.grid(row=0, column=2)
         self.port = self.get_port()
+        # 获取的串口号放入cmb
         self.cmb['value'] = self.port
 
     def get_port(self):
+        # 获取串口列表信息
         self.port_list = list(serial.tools.list_ports.comports())
+        # 定义空list 存放串口号
         self.comlist = []
+        # 遍历port_list 存放到comlist
         for i in range(0, len(self.port_list)):
             self.comlist.append(self.port_list[i][0])
         return self.comlist
 
     def start(self):
+        # 选择重启复选框
         check = self.var.get()
         if check:
+            # button状态不可点击
             self.button1['state'] = DISABLED
             d = self.read_yml()
             com = self.cmb.get()
