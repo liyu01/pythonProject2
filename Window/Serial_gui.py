@@ -16,7 +16,7 @@ class MY_GUI():
 
     # 设置窗口
     def set_init_window(self):
-        var = IntVar()
+        self.var = BooleanVar()
         # 标签控件
         Label(self.tk, text="串口号:").grid(row=0, sticky=E)
         Label(self.tk, text="波特率:").grid(row=2, sticky=E)
@@ -25,6 +25,7 @@ class MY_GUI():
 
         self.Index = Entry(self.tk, width=6)
         self.Index.grid(row=0, column=6)
+        self.Index.insert(0, 6)
         # 输入控件
         self.cmb = ttk.Combobox(self.tk)
         self.cmb.grid(row=0, column=1, padx=10, pady=10, sticky=W)
@@ -33,7 +34,7 @@ class MY_GUI():
         self.cmb1['values'] = ('115200', '9600')
         self.cmb1.current(0)
         # 多选框插件
-        self.button = Checkbutton(self.tk, text="重启", variable=var)
+        self.button = Checkbutton(self.tk, text="重启", variable=self.var)
         self.button.grid(row=3, columnspan=2, sticky=W)
         # 插入展示框
         self.text1 = Text(self.tk, width=80, height=30)
@@ -46,30 +47,31 @@ class MY_GUI():
 
     def get_port(self):
         self.port_list = list(serial.tools.list_ports.comports())
-        # while len(self.port_list) == 0:
-        #     self.port_list = list(serial.tools.list_ports.comports())
         self.comlist = []
         for i in range(0, len(self.port_list)):
             self.comlist.append(self.port_list[i][0])
         return self.comlist
 
     def start(self):
-
-        self.button1['state'] = DISABLED
-        d = self.read_yml()
-        com = self.cmb.get()
-        index = int(self.Index.get())
-        bps = self.cmb1.get()
-        if com == "":
-            self.text1.insert(1.0, "请选择串口号\n")
+        check = self.var.get()
+        if check:
+            self.button1['state'] = DISABLED
+            d = self.read_yml()
+            com = self.cmb.get()
+            index = int(self.Index.get())
+            bps = self.cmb1.get()
+            if com == "":
+                self.text1.insert(1.0, "请选择串口号\n")
+            else:
+                self.text1.delete(1.0, END)
+                com_sort = self.cmb.get()
+                self.text1.insert(1.0, "程序运行\n")
+                com1 = self.serial_set(com_sort, bps)
+                self.log_Read(com=com1, order=d[2]["order"], expect=d[4]["expect"], count=index)
+                self.button1['state'] = NORMAL
+                return
         else:
-            self.text1.delete(1.0, END)
-            com_sort = self.cmb.get()
-            self.text1.insert(1.0, "程序运行\n")
-            com1 = self.serial_set(com_sort, bps)
-            self.log_Read(com=com1, order=d[2]["order"], expect=d[4]["expect"], count=index)
-            self.button1['state'] = NORMAL
-            return
+            self.text1.insert(1.0, "选择程序\n")
 
     def thread_it(self, func, *args):
         '''将函数打包进线程'''
@@ -126,7 +128,6 @@ class MY_GUI():
             for y in order:
                 self.script_write(y, com)
             self.text1.insert("end", "第" + str(i) + "次重启\n")
-            print(f"重启第 {i} 次")
             self.Date_txtpath(t, f"重启第 {i} 次" + "\n")
             while True:
                 #  按行读取串口数据
@@ -136,10 +137,8 @@ class MY_GUI():
                 for x in expect:
                     if x in strdate:
                         self.text1.insert("end", strdate + "\n")
-                        print(strdate)
                 if strdate == "b''":
                     self.text1.insert("end", "退出\n")
-                    print("退出")
                     break
         return None
 
